@@ -1,2 +1,1 @@
-# UNSW
-Projects in uni
+# Projects in uni
