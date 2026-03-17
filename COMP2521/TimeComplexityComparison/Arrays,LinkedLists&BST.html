@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Complexity Comparison — COMP2521</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f4f0;
+    --bg3: #eeedea;
+    --text: #1a1a18;
+    --text2: #5f5e5a;
+    --text3: #9c9a92;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.08);
+    --green-bg: #eaf3de; --green-text: #3b6d11;
+    --amber-bg: #faeeda; --amber-text: #854f0b;
+    --red-bg:   #fcebeb; --red-text:   #a32d2d;
+    --radius: 8px;
+    --mono: 'Courier New', monospace;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --bg2: #252523; --bg3: #2e2e2b;
+      --text: #e8e6de; --text2: #a8a69e; --text3: #6e6c65;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.06);
+      --green-bg: #173404; --green-text: #97c459;
+      --amber-bg: #412402; --amber-text: #ef9f27;
+      --red-bg:   #501313; --red-text:   #f09595;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 2rem 1.5rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    font-size: 11px; font-weight: 500; color: var(--text2);
+    padding: 8px 10px; text-align: center;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+  thead th.op-col { text-align: left; }
+  td {
+    padding: 8px 10px; text-align: center;
+    border-bottom: 0.5px solid var(--border2);
+    font-family: var(--mono); font-size: 13px; color: var(--text);
+  }
+  td.op-name {
+    text-align: left; font-family: var(--sans);
+    font-weight: 500; font-size: 13px; color: var(--text2);
+    white-space: nowrap;
+  }
+  .note { font-size: 11px; color: var(--text3); display: block; margin-top: 2px; font-weight: 400; }
+  tr:last-child td { border-bottom: none; }
+  .good { background: var(--green-bg); color: var(--green-text); border-radius: 4px; display: inline-block; padding: 1px 8px; }
+  .mid  { background: var(--amber-bg); color: var(--amber-text); border-radius: 4px; display: inline-block; padding: 1px 8px; }
+  .bad  { background: var(--red-bg);   color: var(--red-text);   border-radius: 4px; display: inline-block; padding: 1px 8px; }
+  .note-box {
+    font-size: 12px; color: var(--text2); margin-top: 16px;
+    padding: 10px 14px; border-left: 2px solid var(--border);
+    background: var(--bg2); border-radius: 0 var(--radius) var(--radius) 0;
+    line-height: 1.7;
+  }
+  .note-box strong { color: var(--text); font-weight: 500; }
+  .legend { display: flex; gap: 16px; margin-bottom: 12px; font-size: 12px; color: var(--text2); align-items: center; flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+</style>
+</head>
+<body>
+  <h1>Time Complexity Comparison</h1>
+  <p class="subtitle">COMP2521 — Arrays, Linked Lists & BST</p>
+
+  <div class="legend">
+    <span><span class="good">O(1) / O(log n)</span> 优</span>
+    <span><span class="mid">O(n)</span> 一般</span>
+    <span><span class="bad">O(n)</span> 差（有更好选择时）</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="op-col" style="width:130px">操作 Operation</th>
+        <th>Unsorted<br>Array</th>
+        <th>Sorted<br>Array</th>
+        <th>Unsorted<br>List</th>
+        <th>Sorted<br>List</th>
+        <th>BST (avg)</th>
+        <th>BST (worst)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="op-name">insertHead<br><span class="note">插入头部</span></td>
+        <td><span class="bad">O(n)</span><span class="note">shift all</span></td>
+        <td><span class="bad">O(n)</span><span class="note">维持顺序</span></td>
+        <td><span class="good">O(1)</span></td>
+        <td><span class="bad">O(n)</span><span class="note">找位置</span></td>
+        <td><span class="mid">O(log n)</span></td>
+        <td><span class="bad">O(n)</span></td>
+      </tr>
+      <tr>
+        <td class="op-name">insertTail<br><span class="note">插入尾部</span></td>
+        <td><span class="good">O(1)</span><span class="note">amortized</span></td>
+        <td><span class="bad">O(n)</span><span class="note">维持顺序</span></td>
+        <td><span class="good">O(1)</span><span class="note">with tail ptr</span></td>
+        <td><span class="bad">O(n)</span><span class="note">找位置</span></td>
+        <td><span class="mid">O(log n)</span></td>
+        <td><span class="bad">O(n)</span></td>
+      </tr>
+      <tr>
+        <td class="op-name">insert<br><span class="note">按位置/值插入</span></td>
+        <td><span class="bad">O(n)</span><span class="note">shift elements</span></td>
+        <td><span class="bad">O(n)</span><span class="note">binary search + shift</span></td>
+        <td><span class="bad">O(n)</span><span class="note">traverse to pos</span></td>
+        <td><span class="bad">O(n)</span><span class="note">find + link</span></td>
+        <td><span class="mid">O(log n)</span></td>
+        <td><span class="bad">O(n)</span></td>
+      </tr>
+      <tr>
+        <td class="op-name">delete(value)<br><span class="note">按值删除</span></td>
+        <td><span class="bad">O(n)</span><span class="note">find + shift</span></td>
+        <td><span class="bad">O(n)</span><span class="note">binary search + shift</span></td>
+        <td><span class="bad">O(n)</span><span class="note">traverse + unlink</span></td>
+        <td><span class="bad">O(n)</span><span class="note">find + unlink</span></td>
+        <td><span class="mid">O(log n)</span></td>
+        <td><span class="bad">O(n)</span></td>
+      </tr>
+      <tr>
+        <td class="op-name">find<br><span class="note">查找值</span></td>
+        <td><span class="bad">O(n)</span><span class="note">linear scan</span></td>
+        <td><span class="good">O(log n)</span><span class="note">binary search</span></td>
+        <td><span class="bad">O(n)</span><span class="note">linear scan</span></td>
+        <td><span class="bad">O(n)</span><span class="note">linear scan</span></td>
+        <td><span class="mid">O(log n)</span></td>
+        <td><span class="bad">O(n)</span></td>
+      </tr>
+      <tr>
+        <td class="op-name">traverse<br><span class="note">遍历全部</span></td>
+        <td><span class="mid">O(n)</span></td>
+        <td><span class="mid">O(n)</span></td>
+        <td><span class="mid">O(n)</span></td>
+        <td><span class="mid">O(n)</span></td>
+        <td><span class="mid">O(n)</span></td>
+        <td><span class="mid">O(n)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note-box">
+    <strong>BST 说明：</strong> 平均 O(log n) 是树平衡时的情况。若插入有序数据（如 1,2,3,4…），BST 退化为链表，所有操作变为 O(n)。平衡树（AVL, Red-Black Tree）可保证最坏 O(log n)。<br>
+    <strong>Sorted Array 的 find</strong> 可用 binary search 达到 O(log n)，但插入/删除仍需 O(n) 来移动元素。
+  </div>
+</body>
+</html>
